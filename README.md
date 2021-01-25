@@ -14,7 +14,10 @@ pip install -r requirements.txt
   
 Для получения `SECRET_KEY_SUPERJOB_API` перейдите по ссылке [SuperJob](https://api.superjob.ru/#password) и
 ознакомьтесь с документаций, в ней содержится инструкция.
-
+* Запустите код
+```sh
+python main.py
+```
 ### Цель проекта
 Код написан в образовательных целях на онлайн-курсе для веб-разработчиков [dvmn.org](https://dvmn.org/modules/).
 
