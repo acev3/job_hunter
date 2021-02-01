@@ -73,7 +73,6 @@ def predict_rub_salary_sj(payload, super_job_key):
     headers = {"X-Api-App-Id": super_job_key}
     url = "https://api.superjob.ru/2.0/vacancies/"
     page = 0
-    #pages = get_request(url, payload, headers)['pages']
     vacancies_number = get_request(url, payload, headers)['total']
     pages = vacancies_number // 100 +1
     while page < pages:
