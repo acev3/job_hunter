@@ -4,9 +4,9 @@ from dotenv import load_dotenv
 from terminaltables import DoubleTable
 
 
-def get_hh_vacancies(programming_languages):
+def get_hh_vacancies(programming_languages, area="1", period="30"):
     vacancies_stat = {}
-    payload = {"period": "30", "area": "1" , "page":0}
+    payload = {"period": period, "area": area , "page":0}
     for language in programming_languages:
         payload['text'] = "Программист {}".format(language)
         language_stat = predict_rub_salary_hh(payload)
@@ -58,9 +58,9 @@ def predict_salary(salary_from, salary_to):
         return (salary_to + salary_from) / 2
 
 
-def get_super_job_vacancies(programming_languages):
+def get_super_job_vacancies(programming_languages, town_id=4, catalogues=48):
     vacancies_stat = {}
-    payload = {"town": 4, "catalogues": 48 , "page": 0, "count":100}
+    payload = {"town": town_id, "catalogues": catalogues , "page": 0, "count":100}
     for language in programming_languages:
         payload['keyword'] = language
         language_stat = predict_rub_salary_sj(payload)
