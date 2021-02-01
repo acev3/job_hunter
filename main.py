@@ -99,25 +99,25 @@ def predict_rub_salary_sj(payload, super_job_key):
 
 
 def create_table(vacancies_information, title):
-    TABLE_DATA = [
+    table_data = [
         ['Язык программирования', 'Найдено вакансий', 'Обработано вакансий', 'Средняя зарплата']
     ]
     for language in vacancies_information.keys():
-        TABLE_DATA.append([language, vacancies_information[language]['vacancies_found'],
+        table_data.append([language, vacancies_information[language]['vacancies_found'],
                            vacancies_information[language]['vacancies_processed'],
                            vacancies_information[language]['average_salary']])
-    table_instance = DoubleTable(TABLE_DATA, title)
+    table_instance = DoubleTable(table_data, title)
     return table_instance.table
 
 
 def main():
     load_dotenv()
-    SUPER_JOB_KEY = os.getenv("SECRET_KEY_SUPERJOB_API")
+    super_job_key = os.getenv("SECRET_KEY_SUPERJOB_API")
     programming_languages = ['Python', 'C', 'C++', 'Java',
                              'JavaScript', 'PHP', 'C#',
                              'Swift', 'Scala', 'Go']
     hh_vacancies_info = get_hh_vacancies(programming_languages)
-    sp_vacancies_info = get_super_job_vacancies(programming_languages, SUPER_JOB_KEY)
+    sp_vacancies_info = get_super_job_vacancies(programming_languages, super_job_key)
     print(create_table(hh_vacancies_info, "HeadHunter Moscow"))
     print(create_table(sp_vacancies_info, "SuperJob Moscow"))
 
