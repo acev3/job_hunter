@@ -4,12 +4,9 @@ from dotenv import load_dotenv
 from terminaltables import DoubleTable
 
 
-def get_hh_vacancies():
+def get_hh_vacancies(programming_languages):
     vacancies_stat = {}
     payload = {"period": "30", "area": "1" , "page":0}
-    programming_languages = ['Python', 'C', 'C++', 'Java',
-                             'JavaScript', 'PHP', 'C#',
-                             'Swift', 'Scala', 'Go']
     for language in programming_languages:
         payload['text'] = "Программист {}".format(language)
         language_stat = predict_rub_salary_hh(payload)
@@ -61,14 +58,11 @@ def predict_salary(salary_from, salary_to):
         return (salary_to + salary_from) / 2
 
 
-def get_super_job_vacancies():
+def get_super_job_vacancies(programming_languages):
     vacancies_stat = {}
     payload = {"town": 4, "catalogues": 48 , "page": 0, "count":100}
-    programming_languages = ['Python', 'C', 'C++', 'Java',
-                             'JavaScript', 'PHP', 'C#',
-                             'Swift', 'Scala', 'Go']
     for language in programming_languages:
-        payload['keyword'] = "{}".format(language)
+        payload['keyword'] = language
         language_stat = predict_rub_salary_sj(payload)
         vacancies_stat[language] = language_stat
     return vacancies_stat
@@ -119,8 +113,11 @@ def create_table(vacancies_information, title):
 
 
 def main():
-    hh_vacancies_info = get_hh_vacancies()
-    sp_vacancies_info = get_super_job_vacancies()
+    programming_languages = ['Python', 'C', 'C++', 'Java',
+                             'JavaScript', 'PHP', 'C#',
+                             'Swift', 'Scala', 'Go']
+    hh_vacancies_info = get_hh_vacancies(programming_languages)
+    sp_vacancies_info = get_super_job_vacancies(programming_languages)
     print(create_table(hh_vacancies_info,"HeadHunter Moscow"))
     print()
     print(create_table(sp_vacancies_info,"SuperJob Moscow"))
