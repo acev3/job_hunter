@@ -39,12 +39,12 @@ def predict_rub_salary_hh(payload):
             salary_from = salary['from']
             salary_to = salary['to']
             average_salary = int(predict_salary(salary_from, salary_to))
-            if average_salary != 0:
+            if average_salary:
                 language_salary.append(average_salary)
         page += 1
     vacancies_info = {"vacancies_found": vacancies_number,
-                     "vacancies_processed": len(language_salary),
-                     "average_salary" :int(sum(language_salary)/len(language_salary))
+                      "vacancies_processed": len(language_salary),
+                      "average_salary" :int(sum(language_salary)/len(language_salary))
                      }
     return vacancies_info
 
@@ -90,13 +90,13 @@ def predict_rub_salary_sj(payload):
             salary_to = vacancy['payment_to']
             if predict_salary(salary_from, salary_to):
                 average_salary = int(predict_salary(salary_from, salary_to))
-            if average_salary!=0:
+            if average_salary:
                 language_salary.append(average_salary)
         page += 1
     vacancies_info = {"vacancies_found": vacancies_number,
                       "vacancies_processed": len(language_salary),
                       "average_salary": int(sum(language_salary) / len(language_salary))
-                      }
+                     }
     return vacancies_info
 
 
@@ -118,10 +118,8 @@ def main():
                              'Swift', 'Scala', 'Go']
     hh_vacancies_info = get_hh_vacancies(programming_languages)
     sp_vacancies_info = get_super_job_vacancies(programming_languages)
-    print(create_table(hh_vacancies_info,"HeadHunter Moscow"))
-    print()
-    print(create_table(sp_vacancies_info,"SuperJob Moscow"))
-    print()
+    print(create_table(hh_vacancies_info, "HeadHunter Moscow"))
+    print(create_table(sp_vacancies_info, "SuperJob Moscow"))
 
 
 if __name__ == '__main__':
