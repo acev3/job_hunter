@@ -85,8 +85,9 @@ def predict_rub_salary_sj(payload, super_job_key):
             average_salary = 0
             salary_from = vacancy['payment_from']
             salary_to = vacancy['payment_to']
-            if predict_salary(salary_from, salary_to):
-                average_salary = int(predict_salary(salary_from, salary_to))
+            predicted_salary = predict_salary(salary_from, salary_to)
+            if predicted_salary:
+                average_salary = int(predicted_salary)
             if average_salary:
                 language_salary.append(average_salary)
         page += 1
@@ -101,10 +102,10 @@ def create_table(vacancies_information, title):
     table_data = [
         ['Язык программирования', 'Найдено вакансий', 'Обработано вакансий', 'Средняя зарплата']
     ]
-    for language in vacancies_information.keys():
-        table_data.append([language, vacancies_information[language]['vacancies_found'],
-                           vacancies_information[language]['vacancies_processed'],
-                           vacancies_information[language]['average_salary']])
+    for language, vacancies_info in vacancies_information.items():
+        table_data.append([language, vacancies_info['vacancies_found'],
+                           vacancies_info['vacancies_processed'],
+                           vacancies_info['average_salary']])
     table_instance = DoubleTable(table_data, title)
     return table_instance.table
 
