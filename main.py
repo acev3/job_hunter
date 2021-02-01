@@ -81,7 +81,7 @@ def predict_rub_salary_sj(payload):
     while page < pages:
         vacancies = get_request(url, payload, headers)['objects']
         for vacancy in vacancies:
-            if vacancy is None:
+            if not vacancy:
                 continue
             elif vacancy['currency'] != 'rub':
                 continue
