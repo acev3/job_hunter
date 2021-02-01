@@ -22,7 +22,7 @@ def get_request(url, params, headers):
 
 
 def predict_rub_salary_hh(payload):
-    language_info = []
+    language_salary = []
     page = 0
     url = "https://api.hh.ru/vacancies"
     headers = {"User-Agent": "HH-User-Agent"}
@@ -40,11 +40,11 @@ def predict_rub_salary_hh(payload):
             salary_to = salary['to']
             average_salary = int(predict_salary(salary_from, salary_to))
             if average_salary != 0:
-                language_info.append(average_salary)
+                language_salary.append(average_salary)
         page += 1
     vacancies_info = {"vacancies_found": vacancies_number,
-                     "vacancies_processed": len(language_info),
-                     "average_salary" :int(sum(language_info)/len(language_info))
+                     "vacancies_processed": len(language_salary),
+                     "average_salary" :int(sum(language_salary)/len(language_salary))
                      }
     return vacancies_info
 
@@ -71,7 +71,7 @@ def get_super_job_vacancies(programming_languages, town_id=4, catalogues=48):
 def predict_rub_salary_sj(payload):
     load_dotenv()
     SUPER_JOB_KEY = os.getenv("SECRET_KEY_SUPERJOB_API")
-    language_info = []
+    language_salary = []
     headers = {"X-Api-App-Id": SUPER_JOB_KEY}
     url = "https://api.superjob.ru/2.0/vacancies/"
     page = 0
@@ -91,11 +91,11 @@ def predict_rub_salary_sj(payload):
             if predict_salary(salary_from, salary_to):
                 average_salary = int(predict_salary(salary_from, salary_to))
             if average_salary!=0:
-                language_info.append(average_salary)
+                language_salary.append(average_salary)
         page += 1
     vacancies_info = {"vacancies_found": vacancies_number,
-                      "vacancies_processed": len(language_info),
-                      "average_salary": int(sum(language_info) / len(language_info))
+                      "vacancies_processed": len(language_salary),
+                      "average_salary": int(sum(language_salary) / len(language_salary))
                       }
     return vacancies_info
 
