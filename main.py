@@ -58,21 +58,19 @@ def predict_salary(salary_from, salary_to):
         return (salary_to + salary_from) / 2
 
 
-def get_super_job_vacancies(programming_languages, town_id=4, catalogues=48):
+def get_super_job_vacancies(programming_languages, super_job_key, town_id=4, catalogues=48):
     vacancies_stat = {}
     payload = {"town": town_id, "catalogues": catalogues , "page": 0, "count":100}
     for language in programming_languages:
         payload['keyword'] = language
-        language_stat = predict_rub_salary_sj(payload)
+        language_stat = predict_rub_salary_sj(payload, super_job_key)
         vacancies_stat[language] = language_stat
     return vacancies_stat
 
 
-def predict_rub_salary_sj(payload):
-    load_dotenv()
-    SUPER_JOB_KEY = os.getenv("SECRET_KEY_SUPERJOB_API")
+def predict_rub_salary_sj(payload, super_job_key):
     language_salary = []
-    headers = {"X-Api-App-Id": SUPER_JOB_KEY}
+    headers = {"X-Api-App-Id": super_job_key}
     url = "https://api.superjob.ru/2.0/vacancies/"
     page = 0
     #pages = get_request(url, payload, headers)['pages']
@@ -113,11 +111,13 @@ def create_table(vacancies_information, title):
 
 
 def main():
+    load_dotenv()
+    SUPER_JOB_KEY = os.getenv("SECRET_KEY_SUPERJOB_API")
     programming_languages = ['Python', 'C', 'C++', 'Java',
                              'JavaScript', 'PHP', 'C#',
                              'Swift', 'Scala', 'Go']
     hh_vacancies_info = get_hh_vacancies(programming_languages)
-    sp_vacancies_info = get_super_job_vacancies(programming_languages)
+    sp_vacancies_info = get_super_job_vacancies(programming_languages, SUPER_JOB_KEY)
     print(create_table(hh_vacancies_info, "HeadHunter Moscow"))
     print(create_table(sp_vacancies_info, "SuperJob Moscow"))
 
