@@ -112,7 +112,7 @@ def create_table(vacancies_information, title):
 
 def main():
     load_dotenv()
-    super_job_key = os.getenv("SECRET_KEY_SUPERJOB_API")
+    super_job_key = os.getenv("SUPERJOB_API_SECRET_KEY")
     programming_languages = ['Python', 'C', 'C++', 'Java',
                              'JavaScript', 'PHP', 'C#',
                              'Swift', 'Scala', 'Go']
