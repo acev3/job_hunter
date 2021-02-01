@@ -9,8 +9,9 @@
 pip install -r requirements.txt
 ```
 * Создайте в проекте файл `.env`
+* Создайте файл `.env` в директории с проектом.
 * Заполните `.env` следующими переменными:
-  `SECRET_KEY_SUPERJOB_API` - Ключ для api [SuperJob](https://api.superjob.ru/#password)
+  `SECRET_KEY_SUPERJOB_API="KEY"` - `KEY`, Ключ для api [SuperJob](https://api.superjob.ru/#password)
   
 Для получения `SECRET_KEY_SUPERJOB_API` перейдите по ссылке [SuperJob](https://api.superjob.ru/#password) и
 ознакомьтесь с документаций, в ней содержится инструкция.
