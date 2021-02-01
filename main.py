@@ -32,7 +32,7 @@ def predict_rub_salary_hh(payload):
         vacancies = get_request(url, payload, headers)['items']
         for vacancy in vacancies:
             salary = vacancy['salary']
-            if salary is None:
+            if not salary:
                 continue
             elif salary['currency'] != 'RUR':
                 continue
@@ -50,9 +50,9 @@ def predict_rub_salary_hh(payload):
 
 
 def predict_salary(salary_from, salary_to):
-    if salary_from and salary_to in (0, None):
+    if salary_from and not salary_to:
         return salary_from * 1.2
-    elif salary_from in (0, None) and salary_to:
+    elif not salary_from and salary_to:
         return salary_to * 0.8
     elif salary_from and salary_to:
         return (salary_to + salary_from) / 2
