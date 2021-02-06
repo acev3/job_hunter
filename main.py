@@ -43,11 +43,11 @@ def predict_rub_salary_hh(payload):
             if average_salary:
                 language_salary.append(average_salary)
         page += 1
-    vacancies_info = {"vacancies_found": vacancy_numbers,
+    hh_vacancies = {"vacancies_found": vacancy_numbers,
                       "vacancies_processed": len(language_salary),
                       "average_salary": int(sum(language_salary)/len(language_salary))
                      }
-    return vacancies_info
+    return hh_vacancies
 
 
 def predict_salary(salary_from, salary_to):
@@ -93,11 +93,11 @@ def predict_rub_salary_sj(payload, super_job_key):
             if average_salary:
                 language_salary.append(average_salary)
         page += 1
-    vacancies_info = {"vacancies_found": vacancy_numbers,
+    sj_vacancies = {"vacancies_found": vacancy_numbers,
                       "vacancies_processed": len(language_salary),
                       "average_salary": int(sum(language_salary) / len(language_salary))
                      }
-    return vacancies_info
+    return sj_vacancies
 
 
 def create_table(vacancies_information, title):
