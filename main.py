@@ -8,13 +8,13 @@ def get_hh_vacancies(programming_languages, area="1", period="30"):
     vacancies_stat = {}
     payload = {"period": period, "area": area , "page":0}
     for language in programming_languages:
-        payload['text'] = "Программист {}".format(language)
+        payload["text"] = "Программист {}".format(language)
         language_stat = predict_rub_salary_hh(payload)
         vacancies_stat[language] = language_stat
     return vacancies_stat
 
 
-def get_request(url, params, headers):
+def get_response(url, params, headers):
     response = requests.get(url, headers=headers, params=params)
     response.raise_for_status()
     response = response.json()
@@ -26,18 +26,18 @@ def predict_rub_salary_hh(payload):
     page = 0
     url = "https://api.hh.ru/vacancies"
     headers = {"User-Agent": "HH-User-Agent"}
-    pages = get_request(url, payload, headers)['pages']
-    vacancies_number = get_request(url, payload, headers)['found']
+    pages = get_response(url, payload, headers)["pages"]
+    vacancies_number = get_response(url, payload, headers)["found"]
     while page < pages:
-        vacancies = get_request(url, payload, headers)['items']
+        vacancies = get_response(url, payload, headers)["items"]
         for vacancy in vacancies:
-            salary = vacancy['salary']
+            salary = vacancy["salary"]
             if not salary:
                 continue
-            elif salary['currency'] != 'RUR':
+            elif salary["currency"] != "RUR":
                 continue
-            salary_from = salary['from']
-            salary_to = salary['to']
+            salary_from = salary["from"]
+            salary_to = salary["to"]
             average_salary = int(predict_salary(salary_from, salary_to))
             if average_salary:
                 language_salary.append(average_salary)
@@ -62,7 +62,7 @@ def get_super_job_vacancies(programming_languages, super_job_key, town_id=4, cat
     vacancies_stat = {}
     payload = {"town": town_id, "catalogues": catalogues , "page": 0, "count":100}
     for language in programming_languages:
-        payload['keyword'] = language
+        payload["keyword"] = language
         language_stat = predict_rub_salary_sj(payload, super_job_key)
         vacancies_stat[language] = language_stat
     return vacancies_stat
@@ -73,18 +73,18 @@ def predict_rub_salary_sj(payload, super_job_key):
     headers = {"X-Api-App-Id": super_job_key}
     url = "https://api.superjob.ru/2.0/vacancies/"
     page = 0
-    vacancies_number = get_request(url, payload, headers)['total']
+    vacancies_number = get_response(url, payload, headers)["total"]
     pages = vacancies_number // 100 +1
     while page < pages:
-        vacancies = get_request(url, payload, headers)['objects']
+        vacancies = get_response(url, payload, headers)["objects"]
         for vacancy in vacancies:
             if not vacancy:
                 continue
-            elif vacancy['currency'] != 'rub':
+            elif vacancy["currency"] != "rub":
                 continue
             average_salary = 0
-            salary_from = vacancy['payment_from']
-            salary_to = vacancy['payment_to']
+            salary_from = vacancy["payment_from"]
+            salary_to = vacancy["payment_to"]
             predicted_salary = predict_salary(salary_from, salary_to)
             if predicted_salary:
                 average_salary = int(predicted_salary)
@@ -100,12 +100,12 @@ def predict_rub_salary_sj(payload, super_job_key):
 
 def create_table(vacancies_information, title):
     table_data = [
-        ['Язык программирования', 'Найдено вакансий', 'Обработано вакансий', 'Средняя зарплата']
+        ["Язык программирования", "Найдено вакансий", "Обработано вакансий", "Средняя зарплата"]
     ]
     for language, vacancies_info in vacancies_information.items():
-        table_data.append([language, vacancies_info['vacancies_found'],
-                           vacancies_info['vacancies_processed'],
-                           vacancies_info['average_salary']])
+        table_data.append([language, vacancies_info["vacancies_found"],
+                           vacancies_info["vacancies_processed"],
+                           vacancies_info["average_salary"]])
     table_instance = DoubleTable(table_data, title)
     return table_instance.table
 
@@ -113,14 +113,14 @@ def create_table(vacancies_information, title):
 def main():
     load_dotenv()
     super_job_key = os.getenv("SUPERJOB_API_SECRET_KEY")
-    programming_languages = ['Python', 'C', 'C++', 'Java',
-                             'JavaScript', 'PHP', 'C#',
-                             'Swift', 'Scala', 'Go']
+    programming_languages = ["Python", "C", "C++", "Java",
+                             "JavaScript", "PHP", "C#",
+                             "Swift", "Scala", "Go"]
     hh_vacancies_info = get_hh_vacancies(programming_languages)
     sp_vacancies_info = get_super_job_vacancies(programming_languages, super_job_key)
     print(create_table(hh_vacancies_info, "HeadHunter Moscow"))
     print(create_table(sp_vacancies_info, "SuperJob Moscow"))
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
      main()
