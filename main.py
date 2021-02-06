@@ -118,10 +118,10 @@ def main():
     programming_languages = ["Python", "C", "C++", "Java",
                              "JavaScript", "PHP", "C#",
                              "Swift", "Scala", "Go"]
-    hh_vacancies_info = get_hh_vacancies(programming_languages)
-    sp_vacancies_info = get_super_job_vacancies(programming_languages, super_job_key)
-    print(create_table(hh_vacancies_info, "HeadHunter Moscow"))
-    print(create_table(sp_vacancies_info, "SuperJob Moscow"))
+    hh_vacancies = get_hh_vacancies(programming_languages)
+    sp_vacancies = get_super_job_vacancies(programming_languages, super_job_key)
+    print(create_table(hh_vacancies, "HeadHunter Moscow"))
+    print(create_table(sp_vacancies, "SuperJob Moscow"))
 
 
 if __name__ == "__main__":
