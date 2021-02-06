@@ -26,10 +26,11 @@ def predict_rub_salary_hh(payload):
     page = 0
     url = "https://api.hh.ru/vacancies"
     headers = {"User-Agent": "HH-User-Agent"}
-    pages = get_response(url, payload, headers)["pages"]
-    vacancy_numbers = get_response(url, payload, headers)["found"]
+    response = get_response(url, payload, headers)
+    pages = response["pages"]
+    vacancy_numbers = response["found"]
     while page < pages:
-        vacancies = get_response(url, payload, headers)["items"]
+        vacancies = response["items"]
         for vacancy in vacancies:
             salary = vacancy["salary"]
             if not salary:
@@ -73,10 +74,11 @@ def predict_rub_salary_sj(payload, super_job_key):
     headers = {"X-Api-App-Id": super_job_key}
     url = "https://api.superjob.ru/2.0/vacancies/"
     page = 0
-    vacancy_numbers = get_response(url, payload, headers)["total"]
+    response = get_response(url, payload, headers)
+    vacancy_numbers = response["total"]
     pages = vacancy_numbers // 100 +1
     while page < pages:
-        vacancies = get_response(url, payload, headers)["objects"]
+        vacancies = response["objects"]
         for vacancy in vacancies:
             if not vacancy:
                 continue
