@@ -6,10 +6,16 @@ from terminaltables import DoubleTable
 
 def get_hh_vacancies(programming_languages, area="1", period="30"):
     vacancy_stats = {}
+    url = "https://api.hh.ru/vacancies"
+    headers = {"User-Agent": "HH-User-Agent"}
     payload = {"period": period, "area": area , "page": 0}
     for language in programming_languages:
         payload["text"] = "Программист {}".format(language)
-        language_stat = predict_rub_salary_hh(payload)
+        response = get_response(url, payload, headers)
+        pages = response["pages"]
+        vacancy_numbers = response["found"]
+        vacancies = response["items"]
+        language_stat = predict_rub_salary_hh(vacancies, pages, vacancy_numbers)
         vacancy_stats[language] = language_stat
     return vacancy_stats
 
@@ -21,16 +27,10 @@ def get_response(url, params, headers):
     return response
 
 
-def predict_rub_salary_hh(payload):
+def predict_rub_salary_hh(vacancies, pages, vacancy_numbers):
     language_salary = []
     page = 0
-    url = "https://api.hh.ru/vacancies"
-    headers = {"User-Agent": "HH-User-Agent"}
-    response = get_response(url, payload, headers)
-    pages = response["pages"]
-    vacancy_numbers = response["found"]
     while page < pages:
-        vacancies = response["items"]
         for vacancy in vacancies:
             salary = vacancy["salary"]
             if not salary:
@@ -46,6 +46,7 @@ def predict_rub_salary_hh(payload):
     hh_vacancies = {"vacancies_found": vacancy_numbers,
                       "vacancies_processed": len(language_salary),
                       "average_salary": int(sum(language_salary)/len(language_salary))
+                      if len(language_salary) else 0
                      }
     return hh_vacancies
 
@@ -61,24 +62,24 @@ def predict_salary(salary_from, salary_to):
 
 def get_super_job_vacancies(programming_languages, super_job_key, town_id=4, catalogues=48):
     vacancy_stats = {}
+    headers = {"X-Api-App-Id": super_job_key}
+    url = "https://api.superjob.ru/2.0/vacancies/"
     payload = {"town": town_id, "catalogues": catalogues , "page": 0, "count": 100}
     for language in programming_languages:
         payload["keyword"] = language
-        language_stat = predict_rub_salary_sj(payload, super_job_key)
+        response = get_response(url, payload, headers)
+        vacancy_numbers = response["total"]
+        pages = vacancy_numbers // 100 + 1
+        vacancies = response["objects"]
+        language_stat = predict_rub_salary_sj(vacancies, pages, vacancy_numbers)
         vacancy_stats[language] = language_stat
     return vacancy_stats
 
 
-def predict_rub_salary_sj(payload, super_job_key):
+def predict_rub_salary_sj(vacancies, pages, vacancy_numbers):
     language_salary = []
-    headers = {"X-Api-App-Id": super_job_key}
-    url = "https://api.superjob.ru/2.0/vacancies/"
     page = 0
-    response = get_response(url, payload, headers)
-    vacancy_numbers = response["total"]
-    pages = vacancy_numbers // 100 +1
     while page < pages:
-        vacancies = response["objects"]
         for vacancy in vacancies:
             if not vacancy:
                 continue
@@ -96,6 +97,7 @@ def predict_rub_salary_sj(payload, super_job_key):
     sj_vacancies = {"vacancies_found": vacancy_numbers,
                       "vacancies_processed": len(language_salary),
                       "average_salary": int(sum(language_salary) / len(language_salary))
+                      if len(language_salary) else 0
                      }
     return sj_vacancies
 
