@@ -6,7 +6,7 @@ from terminaltables import DoubleTable
 
 def get_hh_vacancies(programming_languages, area="1", period="30"):
     vacancy_stats = {}
-    payload = {"period": period, "area": area , "page":0}
+    payload = {"period": period, "area": area , "page": 0}
     for language in programming_languages:
         payload["text"] = "Программист {}".format(language)
         language_stat = predict_rub_salary_hh(payload)
@@ -45,7 +45,7 @@ def predict_rub_salary_hh(payload):
         page += 1
     vacancies_info = {"vacancies_found": vacancy_numbers,
                       "vacancies_processed": len(language_salary),
-                      "average_salary" :int(sum(language_salary)/len(language_salary))
+                      "average_salary": int(sum(language_salary)/len(language_salary))
                      }
     return vacancies_info
 
@@ -61,7 +61,7 @@ def predict_salary(salary_from, salary_to):
 
 def get_super_job_vacancies(programming_languages, super_job_key, town_id=4, catalogues=48):
     vacancy_stats = {}
-    payload = {"town": town_id, "catalogues": catalogues , "page": 0, "count":100}
+    payload = {"town": town_id, "catalogues": catalogues , "page": 0, "count": 100}
     for language in programming_languages:
         payload["keyword"] = language
         language_stat = predict_rub_salary_sj(payload, super_job_key)
