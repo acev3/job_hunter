@@ -45,9 +45,11 @@ def predict_rub_salary_hh(pages, vacancy_numbers, url, payload, headers):
         page += 1
     hh_vacancies = {"vacancies_found": vacancy_numbers,
                       "vacancies_processed": len(language_salary),
-                      "average_salary": int(sum(language_salary)/len(language_salary))
-                      if len(language_salary) else 0
                      }
+    if len(language_salary):
+        hh_vacancies["average_salary"] = int(sum(language_salary) / len(language_salary))
+    else:
+        hh_vacancies["average_salary"] = 0
     return hh_vacancies
 
 
@@ -95,10 +97,12 @@ def predict_rub_salary_sj(pages, vacancy_numbers, url, payload, headers):
                 language_salary.append(average_salary)
         page += 1
     sj_vacancies = {"vacancies_found": vacancy_numbers,
-                      "vacancies_processed": len(language_salary),
-                      "average_salary": int(sum(language_salary) / len(language_salary))
-                      if len(language_salary) else 0
+                      "vacancies_processed": len(language_salary)
                      }
+    if len(language_salary):
+        sj_vacancies["average_salary"] = int(sum(language_salary) / len(language_salary))
+    else:
+        sj_vacancies["average_salary"] = 0
     return sj_vacancies
 
 
