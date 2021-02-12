@@ -12,9 +12,9 @@ def get_hh_vacancies(programming_languages, area="1", period="30"):
     for language in programming_languages:
         payload["text"] = "Программист {}".format(language)
         response = get_response(url, payload, headers)
-        pages = response["pages"]
-        vacancy_numbers = response["found"]
-        language_stat = predict_rub_salary_hh(pages, vacancy_numbers, url, payload, headers)
+        pages_number = response["pages"]
+        vacancies_amount = response["found"]
+        language_stat = predict_rub_salary_hh(pages_number, vacancies_amount, url, payload, headers)
         vacancy_stats[language] = language_stat
     return vacancy_stats
 
@@ -26,10 +26,10 @@ def get_response(url, params, headers):
     return response
 
 
-def predict_rub_salary_hh(pages, vacancy_numbers, url, payload, headers):
+def predict_rub_salary_hh(pages_number, vacancies_amount, url, payload, headers):
     language_salary = []
     page = 0
-    while page < pages:
+    while page < pages_number:
         payload["page"] = page
         vacancies = get_response(url, payload, headers)["items"]
         for vacancy in vacancies:
@@ -44,7 +44,7 @@ def predict_rub_salary_hh(pages, vacancy_numbers, url, payload, headers):
             if average_salary:
                 language_salary.append(average_salary)
         page += 1
-    hh_vacancies = {"vacancies_found": vacancy_numbers,
+    hh_vacancies = {"vacancies_found": vacancies_amount,
                       "vacancies_processed": len(language_salary),
                      }
     if len(language_salary):
@@ -71,17 +71,17 @@ def get_super_job_vacancies(programming_languages, super_job_key, town_id=4, cat
     for language in programming_languages:
         payload["keyword"] = language
         response = get_response(url, payload, headers)
-        vacancy_numbers = response["total"]
-        pages = vacancy_numbers // 100 + 1
-        language_stat = predict_rub_salary_sj(pages, vacancy_numbers, url, payload, headers)
+        vacancies_amount = response["total"]
+        pages_number = vacancies_amount // 100 + 1
+        language_stat = predict_rub_salary_sj(pages_number, vacancies_amount, url, payload, headers)
         vacancy_stats[language] = language_stat
     return vacancy_stats
 
 
-def predict_rub_salary_sj(pages, vacancy_numbers, url, payload, headers):
+def predict_rub_salary_sj(pages_number, vacancies_amount, url, payload, headers):
     language_salary = []
     page = 0
-    while page < pages:
+    while page < pages_number:
         payload["page"] = page
         response = get_response(url, payload, headers)
         if not response["more"]:
@@ -101,7 +101,7 @@ def predict_rub_salary_sj(pages, vacancy_numbers, url, payload, headers):
             if average_salary:
                 language_salary.append(average_salary)
         page += 1
-    sj_vacancies = {"vacancies_found": vacancy_numbers,
+    sj_vacancies = {"vacancies_found": vacancies_amount,
                       "vacancies_processed": len(language_salary)
                      }
     if len(language_salary):
