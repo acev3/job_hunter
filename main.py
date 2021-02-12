@@ -30,6 +30,7 @@ def predict_rub_salary_hh(pages, vacancy_numbers, url, payload, headers):
     language_salary = []
     page = 0
     while page < pages:
+        payload["page"] = page
         vacancies = get_response(url, payload, headers)["items"]
         for vacancy in vacancies:
             salary = vacancy["salary"]
@@ -81,6 +82,7 @@ def predict_rub_salary_sj(pages, vacancy_numbers, url, payload, headers):
     language_salary = []
     page = 0
     while page < pages:
+        payload["page"] = page
         vacancies = get_response(url, payload, headers)["objects"]
         for vacancy in vacancies:
             if not vacancy:
