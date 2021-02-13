@@ -96,8 +96,6 @@ def predict_rub_salary_sj(pages_number, vacancies_amount, url,
     while page < pages_number:
         payload["page"] = page
         response = get_response(url, payload, headers)
-        if not response["more"]:
-            break
         vacancies = response["objects"]
         for vacancy in vacancies:
             if not vacancy:
@@ -113,6 +111,8 @@ def predict_rub_salary_sj(pages_number, vacancies_amount, url,
             if average_salary:
                 language_salary.append(average_salary)
         page += 1
+        if not response["more"]:
+            break
     sj_vacancies = {"vacancies_found": vacancies_amount,
                     "vacancies_processed": len(language_salary)
                     }
