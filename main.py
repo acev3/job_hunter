@@ -81,14 +81,13 @@ def get_super_job_vacancies(programming_languages, super_job_key,
 def predict_rub_salary_sj(url, payload, headers):
     language_salary = []
     page = 0
-    vacancies_amount = 0
     pages_number = 1
     while page < pages_number:
         payload["page"] = page
         response = get_response(url, payload, headers)
+        vacancies_amount = response['total']
         pages_number = vacancies_amount // 100 + 1
         vacancies = response["objects"]
-        vacancies_amount += len(vacancies)
         for vacancy in vacancies:
             if not vacancy:
                 continue
